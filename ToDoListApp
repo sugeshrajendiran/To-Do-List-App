@@ -1,0 +1,60 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+public class ToDoListApp {
+    private JFrame frame;
+    private DefaultListModel<String> listModel;
+    private JList<String> taskList;
+    private JTextField taskField;
+
+    public ToDoListApp() {
+        frame = new JFrame("To-Do List");
+        listModel = new DefaultListModel<>();
+        taskList = new JList<>(listModel);
+        taskField = new JTextField(20);
+
+        JButton addButton = new JButton("Add Task");
+        addButton.addActionListener(new AddTaskListener());
+
+        JButton deleteButton = new JButton("Delete Task");
+        deleteButton.addActionListener(new DeleteTaskListener());
+
+        frame.setLayout(new BorderLayout());
+        frame.add(new JScrollPane(taskList), BorderLayout.CENTER);
+        JPanel panel = new JPanel();
+        panel.add(taskField);
+        panel.add(addButton);
+        panel.add(deleteButton);
+        frame.add(panel, BorderLayout.SOUTH);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.setVisible(true);
+    }
+
+    private class AddTaskListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String task = taskField.getText();
+            if (!task.isEmpty()) {
+                listModel.addElement(task);
+                taskField.setText("");
+            }
+        }
+    }
+
+    private class DeleteTaskListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            int selectedIndex = taskList.getSelectedIndex();
+            if (selectedIndex != -1) {
+                listModel.remove(selectedIndex);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(ToDoListApp::new);
+    }
+}
